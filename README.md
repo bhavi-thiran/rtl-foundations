@@ -1,4 +1,4 @@
-```markdown
+
 # Traffic Light FSM (SystemVerilog)
 
 ## Overview
