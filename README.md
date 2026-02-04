@@ -31,6 +31,10 @@ The design uses a cycle-based timer to control green/yellow durations and a
 Simulated in ModelSim using a directed testbench.  
 Waveform evidence is stored in `docs/waveforms.png`.
 
+### Assertions
+Safety properties are enforced using SystemVerilog assertions (e.g., never both directions green/yellow).
+See `docs/assert_fail.png` for an example of an intentionally-triggered assertion.
+
 ## How to Run (ModelSim)
 
 From the project directory:
