@@ -1,5 +1,5 @@
 ```markdown
-# Traffic Light FSM (SystemVerilog)
+#Traffic Light FSM (SystemVerilog)
 
 ## Overview
 A synchronous Moore-style finite state machine (FSM) for a two-direction
