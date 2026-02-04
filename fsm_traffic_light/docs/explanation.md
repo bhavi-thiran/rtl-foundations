@@ -1,138 +1,73 @@
-\# Design Explanation — Traffic Light FSM
+# Design Explanation — Traffic Light FSM
 
-
-
-\## 1. Architecture Summary
-
+## 1. Architecture Summary
 This module implements a two-direction traffic light controller using a
+synchronous Moore finite state machine (FSM). It alternates traffic flow
+between North–South (NS) and East–West (EW) directions.
 
-synchronous Moore FSM. It alternates traffic flow between North–South (NS)
+Outputs depend only on the current FSM state, which improves predictability
+and simplifies verification.
 
-and East–West (EW) directions. Outputs depend only on the current FSM state,
-
-which improves predictability and simplifies verification.
-
-
-
-\## 2. State Machine
-
+## 2. State Machine
 The FSM uses four states:
-
-\- `NS\_GREEN`
-
-\- `NS\_YELLOW`
-
-\- `EW\_GREEN`
-
-\- `EW\_YELLOW`
-
-
+- `NS_GREEN`
+- `NS_YELLOW`
+- `EW_GREEN`
+- `EW_YELLOW`
 
 States are defined using a SystemVerilog `enum`, improving readability and
-
 reducing the risk of invalid encodings.
 
-
-
 Two variables are used:
+- `state` (registered): current state
+- `next_state` (combinational): next state decision
 
-\- `state` (registered): current state
-
-\- `next\_state` (combinational): next state decision
-
-
-
-\## 3. Timing Mechanism (Cycle-Based Timer)
-
+## 3. Timing Mechanism (Cycle-Based Timer)
 A 4-bit counter `timer` tracks the number of clock cycles spent in the current
+state.
 
-state. The counter:
+The timer:
+- increments when the FSM remains in the same state
+- resets to zero when a state transition occurs
 
-\- increments while staying in the same state
+This approach ensures deterministic state durations and simplifies timing
+analysis.
 
-\- resets to 0 whenever a state transition occurs
+## 4. State Transitions
 
+### NS_GREEN
+- Minimum green duration of 10 cycles
+- Transitions to `NS_YELLOW` only when `car_sensor` is asserted
 
+### NS_YELLOW
+- Fixed duration of 3 cycles
+- Transitions to `EW_GREEN`
 
-This approach keeps state transition timing deterministic and easy to analyze.
+### EW_GREEN
+- Fixed duration of 10 cycles
+- Transitions to `EW_YELLOW`
 
+### EW_YELLOW
+- Fixed duration of 3 cycles
+- Transitions back to `NS_GREEN`
 
+## 5. Output Decode (Moore Outputs)
+Outputs are derived only from the current FSM state:
+- During NS states, EW lights remain red
+- During EW states, NS lights remain red
 
-\## 4. Transition Rules
+All outputs are assigned default values before the state decode logic,
+preventing latch inference.
 
-\### `NS\_GREEN`
+## 6. Reset Behavior
+An active-low reset (`rst_n`) initializes the FSM to:
+- `NS_GREEN` state
+- `timer = 0`
 
-\- Minimum green duration is 10 cycles.
+This guarantees a safe and deterministic startup condition.
 
-\- If `car\_sensor` is asserted and the timer reaches the threshold, the FSM moves
-
-&nbsp; to `NS\_YELLOW`.
-
-\- If `car\_sensor` is not asserted, NS can remain green beyond 10 cycles.
-
-
-
-\### `NS\_YELLOW`
-
-\- Fixed duration of 3 cycles, then transitions to `EW\_GREEN`.
-
-
-
-\### `EW\_GREEN`
-
-\- Fixed duration of 10 cycles, then transitions to `EW\_YELLOW`.
-
-
-
-\### `EW\_YELLOW`
-
-\- Fixed duration of 3 cycles, then transitions back to `NS\_GREEN`.
-
-
-
-\## 5. Output Decode (Moore Outputs)
-
-Outputs are derived only from `state`:
-
-\- During `NS\_GREEN` / `NS\_YELLOW`, EW is red.
-
-\- During `EW\_GREEN` / `EW\_YELLOW`, NS is red.
-
-
-
-All outputs are assigned default 0 values before the case statement, preventing
-
-latch inference and ensuring fully defined behavior.
-
-
-
-\## 6. Reset Behavior
-
-An active-low reset (`rst\_n`) initializes:
-
-\- `state <= NS\_GREEN`
-
-\- `timer <= 0`
-
-
-
-This provides a safe default condition where NS traffic proceeds and EW is held
-
-red after reset.
-
-
-
-\## 7. What to Improve Next
-
-Potential improvements aligned with ASIC/SoC design practices:
-
-\- Parameterize timing constants (green/yellow durations).
-
-\- Add SystemVerilog Assertions (SVA) to formally enforce safety properties.
-
-\- Consider synchronous reset style depending on design guidelines.
-
-\- Add pedestrian request inputs and additional safe states if needed.
-
-
-
+## 7. Future Improvements
+Possible enhancements aligned with ASIC/SoC design practices:
+- Parameterize green/yellow timing values
+- Add SystemVerilog Assertions (SVA) for safety checks
+- Convert to synchronous reset if required by design guidelines
