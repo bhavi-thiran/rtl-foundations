@@ -1,0 +1,58 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/Github/rtl-foundations/fsm_traffic_light
+vtraffic_fsm
+Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+Z2 !s110 1770218807
+!i10b 1
+!s100 C=<DZ:Y2@64b`0>X9VRSc3
+Ig7m=ZzEF62eY]O<zQ:c@U3
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+!s105 traffic_fsm_sv_unit
+S1
+R0
+w1770216179
+8rtl/traffic_fsm.sv
+Frtl/traffic_fsm.sv
+L0 1
+Z4 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z5 !s108 1770218807.000000
+Z6 !s107 tb/traffic_fsm_tb.sv|rtl/traffic_fsm.sv|
+Z7 !s90 -reportprogress|300|-sv|rtl/traffic_fsm.sv|tb/traffic_fsm_tb.sv|
+!i113 1
+o-sv
+Z8 tCvgOpt 0
+vtraffic_fsm_tb
+R1
+R2
+!i10b 1
+!s100 QSK:OSN20:fkJlUA7Fc=A3
+I9S9[MZXa<1HhYSb5LBQm>2
+R3
+!s105 traffic_fsm_tb_sv_unit
+S1
+R0
+w1770216271
+8tb/traffic_fsm_tb.sv
+Ftb/traffic_fsm_tb.sv
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+o-sv
+R8
